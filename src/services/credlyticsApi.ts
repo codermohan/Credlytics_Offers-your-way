@@ -1,6 +1,12 @@
 import { supabase } from "@/integrations/supabase/client";
 import { CardTemplateWithBenefits, UserCardWithTemplate, UserBenefitWithCard } from "@/types/credlytics";
 
+// Helper function to get current user ID
+const getCurrentUserId = async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  return user?.id;
+};
+
 // Fetch all card templates with benefits
 export const fetchCardTemplates = async (): Promise<CardTemplateWithBenefits[]> => {
   const { data: templates, error: templatesError } = await supabase
@@ -24,6 +30,12 @@ export const fetchCardTemplates = async (): Promise<CardTemplateWithBenefits[]> 
 
 // Fetch user's cards with template info
 export const fetchUserCards = async (): Promise<UserCardWithTemplate[]> => {
+  const userId = await getCurrentUserId();
+  
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
   const { data: userCards, error: cardsError } = await supabase
     .from("user_cards")
     .select(`
@@ -36,6 +48,7 @@ export const fetchUserCards = async (): Promise<UserCardWithTemplate[]> => {
         country
       )
     `)
+    .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
   if (cardsError) throw cardsError;
@@ -87,6 +100,12 @@ export const addUserCard = async (
   lastFourDigits: string,
   color: string
 ): Promise<string> => {
+  const userId = await getCurrentUserId();
+  
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
   // Create the user card
   const { data: newCard, error: cardError } = await supabase
     .from("user_cards")
@@ -94,6 +113,7 @@ export const addUserCard = async (
       card_template_id: cardTemplateId,
       last_four_digits: lastFourDigits || null,
       color: color,
+      user_id: userId,
     })
     .select()
     .single();
@@ -135,6 +155,25 @@ export const addUserCard = async (
 
 // Delete a user card (and cascading benefits)
 export const deleteUserCard = async (cardId: string): Promise<void> => {
+  const userId = await getCurrentUserId();
+  
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  // Verify the card belongs to the user before deleting
+  const { data: card, error: fetchError } = await supabase
+    .from("user_cards")
+    .select("user_id")
+    .eq("id", cardId)
+    .single();
+
+  if (fetchError) throw fetchError;
+  
+  if (card.user_id !== userId) {
+    throw new Error("Unauthorized to delete this card");
+  }
+
   const { error } = await supabase
     .from("user_cards")
     .delete()
@@ -166,11 +205,18 @@ export const deleteBenefit = async (benefitId: string): Promise<void> => {
   if (error) throw error;
 };
 
-// Fetch notifications
+// Fetch notifications for the current user
 export const fetchNotifications = async () => {
+  const userId = await getCurrentUserId();
+  
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
   const { data, error } = await supabase
     .from("user_notifications")
     .select("*")
+    .eq("user_id", userId)
     .eq("is_read", false)
     .order("created_at", { ascending: false });
 
