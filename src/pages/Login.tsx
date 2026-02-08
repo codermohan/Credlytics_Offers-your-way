@@ -45,7 +45,7 @@ const Login = () => {
               <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
                 <CreditCard className="w-8 h-8" />
               </div>
-              <h1 className="text-4xl font-bold">Credlytics</h1>
+              <h1 className="text-4xl font-bold">Credlytics Offers Your Way </h1> 
             </div>
             
             <div className="space-y-4">
