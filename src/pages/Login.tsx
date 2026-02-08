@@ -31,52 +31,72 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - Branding */}
+      {/* LEFT SIDE – BRANDING */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary via-accent to-primary relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent" />
-        
-        {/* Decorative elements */}
+
+        {/* Decorative blobs */}
         <div className="absolute top-20 left-20 w-72 h-72 bg-white/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        
-        <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-white">
-          <div className="max-w-md space-y-8">
-            <div className="flex items-center gap-4 mb-8">
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse delay-1000" />
+
+        <div className="relative z-10 flex items-center justify-center w-full p-12 text-white">
+          <div className="max-w-md space-y-12">
+            {/* BRAND HEADER */}
+            <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
                 <CreditCard className="w-8 h-8" />
               </div>
-              <h1 className="text-4xl font-bold">Credlytics Offers Your Way </h1> 
+
+              <div>
+                <h1 className="text-5xl font-extrabold tracking-tight">
+                  Credlytics 
+                </h1>
+                <p className="text-xl font-extrabold tracking-tight">
+                  Offers your way
+                </p>
+              </div>
             </div>
-            
+
+            {/* MAIN MESSAGE */}
             <div className="space-y-4">
-              <h2 className="text-3xl font-bold leading-tight">
+              <h2 className="text-3xl font-bold">
                 Maximize Every Card Benefit
               </h2>
               <p className="text-lg text-white/80">
-                Track, manage, and never miss a credit card benefit again. Your complete benefits companion.
+                Track, manage, and never miss a credit card benefit again.
+                Your complete benefits companion.
               </p>
             </div>
 
-            <div className="space-y-4 pt-8">
-              <div className="flex items-start gap-3">
-                <Sparkles className="w-6 h-6 mt-1 flex-shrink-0" />
+            {/* FEATURES */}
+            <div className="space-y-6 pt-4">
+              <div className="flex gap-3">
+                <Sparkles className="w-6 h-6 mt-1" />
                 <div>
-                  <h3 className="font-semibold mb-1">Smart Tracking</h3>
-                  <p className="text-white/70 text-sm">Automatically import and track all your card benefits in one place</p>
+                  <h3 className="font-semibold">Smart Tracking</h3>
+                  <p className="text-sm text-white/70">
+                    Automatically track all your card benefits in one place
+                  </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <Sparkles className="w-6 h-6 mt-1 flex-shrink-0" />
+
+              <div className="flex gap-3">
+                <Sparkles className="w-6 h-6 mt-1" />
                 <div>
-                  <h3 className="font-semibold mb-1">Never Expire Benefits</h3>
-                  <p className="text-white/70 text-sm">Get timely reminders before your benefits expire or reset</p>
+                  <h3 className="font-semibold">Never Miss Benefits</h3>
+                  <p className="text-sm text-white/70">
+                    Get reminders before benefits expire or reset
+                  </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <Sparkles className="w-6 h-6 mt-1 flex-shrink-0" />
+
+              <div className="flex gap-3">
+                <Sparkles className="w-6 h-6 mt-1" />
                 <div>
-                  <h3 className="font-semibold mb-1">Maximize Savings</h3>
-                  <p className="text-white/70 text-sm">See potential savings and track how much you've utilized</p>
+                  <h3 className="font-semibold">Maximize Savings</h3>
+                  <p className="text-sm text-white/70">
+                    See how much value you’ve unlocked from your cards
+                  </p>
                 </div>
               </div>
             </div>
@@ -84,19 +104,22 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Right Side - Login Form */}
+      {/* RIGHT SIDE – LOGIN */}
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md space-y-8">
-          {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
+          {/* MOBILE BRAND */}
+          <div className="lg:hidden flex flex-col items-center gap-1">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
               <CreditCard className="w-6 h-6 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold gradient-text">Credlytics</h1>
+            <h1 className="text-2xl font-bold">Credlytics</h1>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              Offers your way
+            </p>
           </div>
 
           <div className="space-y-2 text-center lg:text-left">
-            <h2 className="text-3xl font-bold tracking-tight">Welcome back</h2>
+            <h2 className="text-3xl font-bold">Welcome back</h2>
             <p className="text-muted-foreground">
               Sign in to your account to continue
             </p>
@@ -104,25 +127,26 @@ const Login = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+              {/* EMAIL */}
+              <div>
+                <Label>Email</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
-                    id="email"
                     type="email"
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="pl-10 bg-secondary border-0 h-12"
+                    className="pl-10 h-12 bg-secondary border-0"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
+              {/* PASSWORD */}
+              <div>
+                <div className="flex justify-between">
+                  <Label>Password</Label>
                   <Link
                     to="/forgot-password"
                     className="text-sm text-primary hover:underline"
@@ -133,13 +157,12 @@ const Login = () => {
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
-                    id="password"
                     type="password"
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="pl-10 bg-secondary border-0 h-12"
+                    className="pl-10 h-12 bg-secondary border-0"
                   />
                 </div>
               </div>
@@ -147,18 +170,18 @@ const Login = () => {
 
             <Button
               type="submit"
-              className="w-full h-12 text-base bg-gradient-to-r from-primary to-accent hover:opacity-90 text-primary-foreground font-semibold"
               disabled={loading}
+              className="w-full h-12 bg-gradient-to-r from-primary to-accent text-primary-foreground"
             >
               {loading ? "Signing in..." : "Sign in"}
             </Button>
 
-            <div className="text-center text-sm">
-              <span className="text-muted-foreground">Don't have an account? </span>
-              <Link to="/signup" className="text-primary font-semibold hover:underline">
+            <p className="text-center text-sm">
+              Don’t have an account?{" "}
+              <Link to="/signup" className="text-primary font-semibold">
                 Sign up
               </Link>
-            </div>
+            </p>
           </form>
         </div>
       </div>
