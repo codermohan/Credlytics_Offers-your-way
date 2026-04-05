@@ -99,6 +99,13 @@ const Header = ({ onAddCard, notificationCount }: HeaderProps) => {
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-border" />
               <DropdownMenuItem
+                onClick={() => navigate("/deals")}
+                className="cursor-pointer"
+              >
+                <Gift className="mr-2 h-4 w-4" />
+                <span>Daily Deals</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
                 onClick={() => navigate("/profile")}
                 className="cursor-pointer"
               >
