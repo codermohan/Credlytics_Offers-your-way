@@ -248,12 +248,366 @@ export type Database = {
           },
         ]
       }
+      billing_webhook_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: number
+          payload: Json
+          processed_at: string | null
+          stripe_event_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: number
+          payload: Json
+          processed_at?: string | null
+          stripe_event_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: number
+          payload?: Json
+          processed_at?: string | null
+          stripe_event_id?: string
+        }
+        Relationships: []
+      }
+      user_subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string | null
+          expires_at: string | null
+          id: string
+          stripe_customer_id: string | null
+          stripe_price_id: string | null
+          stripe_subscription_id: string | null
+          status: string
+          tier: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          expires_at?: string | null
+          id?: string
+          stripe_customer_id?: string | null
+          stripe_price_id?: string | null
+          stripe_subscription_id?: string | null
+          status?: string
+          tier?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          expires_at?: string | null
+          id?: string
+          stripe_customer_id?: string | null
+          stripe_price_id?: string | null
+          stripe_subscription_id?: string | null
+          status?: string
+          tier?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      merchant_categories: {
+        Row: {
+          created_at: string
+          icon: string
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      merchants: {
+        Row: {
+          accepted_networks: string[]
+          category_id: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          is_national: boolean
+          logo_url: string | null
+          name: string
+          slug: string
+          website_url: string | null
+        }
+        Insert: {
+          accepted_networks?: string[]
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_national?: boolean
+          logo_url?: string | null
+          name: string
+          slug: string
+          website_url?: string | null
+        }
+        Update: {
+          accepted_networks?: string[]
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_national?: boolean
+          logo_url?: string | null
+          name?: string
+          slug?: string
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "merchants_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_deals: {
+        Row: {
+          category_id: string
+          claim_count: number
+          created_at: string
+          deal_score: number
+          deal_type: string
+          description: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          is_featured: boolean
+          merchant_id: string
+          offer_value: string
+          promo_code: string | null
+          redemption_instructions: string
+          title: string
+          updated_at: string
+          valid_from: string
+          valid_until: string | null
+          view_count: number
+        }
+        Insert: {
+          category_id: string
+          claim_count?: number
+          created_at?: string
+          deal_score?: number
+          deal_type: string
+          description?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          merchant_id: string
+          offer_value: string
+          promo_code?: string | null
+          redemption_instructions?: string
+          title: string
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+          view_count?: number
+        }
+        Update: {
+          category_id?: string
+          claim_count?: number
+          created_at?: string
+          deal_score?: number
+          deal_type?: string
+          description?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          merchant_id?: string
+          offer_value?: string
+          promo_code?: string | null
+          redemption_instructions?: string
+          title?: string
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_deals_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_deals_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_deal_preferences: {
+        Row: {
+          blocked_merchants: string[]
+          created_at: string
+          favorite_merchants: string[]
+          id: string
+          max_deals_per_day: number
+          preferred_categories: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          blocked_merchants?: string[]
+          created_at?: string
+          favorite_merchants?: string[]
+          id?: string
+          max_deals_per_day?: number
+          preferred_categories?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          blocked_merchants?: string[]
+          created_at?: string
+          favorite_merchants?: string[]
+          id?: string
+          max_deals_per_day?: number
+          preferred_categories?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_deal_interactions: {
+        Row: {
+          created_at: string
+          deal_id: string
+          id: string
+          interaction_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deal_id: string
+          id?: string
+          interaction_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deal_id?: string
+          id?: string
+          interaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_deal_interactions_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "daily_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_saved_deals: {
+        Row: {
+          created_at: string
+          deal_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deal_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deal_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_saved_deals_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "daily_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_personalized_deals: {
+        Args: {
+          p_limit?: number
+          p_user_id: string
+        }
+        Returns: {
+          category_name: string
+          deal_id: string
+          deal_score: number
+          deal_type: string
+          description: string
+          expires_at: string | null
+          is_featured: boolean
+          merchant_logo: string
+          merchant_name: string
+          offer_value: string
+          promo_code: string | null
+          redemption_instructions: string
+          relevance_score: number
+          title: string
+          valid_until: string | null
+        }[]
+      }
+      track_deal_interaction: {
+        Args: {
+          p_deal_id: string
+          p_interaction_type: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

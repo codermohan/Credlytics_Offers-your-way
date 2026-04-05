@@ -20,7 +20,7 @@ A complete **daily deals and merchant offers system** that sends personalized no
 ## 📁 **FILES CREATED**
 
 ### **Database Migration:**
-- `/supabase/migrations/20260208100000_daily_deals_system.sql`
+- `/supabase/migrations/20260304121000_daily_deals_system.sql`
 
 ### **React Component:**
 - `/src/pages/DailyDeals.tsx` - Complete daily deals page

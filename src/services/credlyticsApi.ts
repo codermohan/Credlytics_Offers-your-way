@@ -1,10 +1,15 @@
 import { supabase } from "@/integrations/supabase/client";
+import { Tables } from "@/integrations/supabase/types";
 import { CardTemplateWithBenefits, UserCardWithTemplate, UserBenefitWithCard } from "@/types/credlytics";
 
 // Helper function to get current user ID
 const getCurrentUserId = async () => {
   const { data: { user } } = await supabase.auth.getUser();
   return user?.id;
+};
+
+type UserCardQueryRow = Tables<"user_cards"> & {
+  card_templates: Pick<Tables<"card_templates">, "name" | "issuer" | "annual_fee" | "network" | "country"> | null;
 };
 
 // Fetch all card templates with benefits
@@ -53,21 +58,29 @@ export const fetchUserCards = async (): Promise<UserCardWithTemplate[]> => {
 
   if (cardsError) throw cardsError;
 
-  return userCards.map((card: any) => ({
-    id: card.id,
-    card_template_id: card.card_template_id,
-    last_four_digits: card.last_four_digits,
-    color: card.color,
-    nickname: card.nickname,
-    created_at: card.created_at,
-    template: {
-      name: card.card_templates.name,
-      issuer: card.card_templates.issuer,
-      annual_fee: card.card_templates.annual_fee,
-      network: card.card_templates.network,
-      country: card.card_templates.country,
-    },
-  }));
+  const typedUserCards = (userCards ?? []) as UserCardQueryRow[];
+
+  return typedUserCards.map((card) => {
+    if (!card.card_templates) {
+      throw new Error("Card template details are missing for one or more user cards.");
+    }
+
+    return {
+      id: card.id,
+      card_template_id: card.card_template_id,
+      last_four_digits: card.last_four_digits,
+      color: card.color,
+      nickname: card.nickname,
+      created_at: card.created_at,
+      template: {
+        name: card.card_templates.name,
+        issuer: card.card_templates.issuer,
+        annual_fee: card.card_templates.annual_fee,
+        network: card.card_templates.network,
+        country: card.card_templates.country,
+      },
+    };
+  });
 };
 
 // Fetch user's benefits

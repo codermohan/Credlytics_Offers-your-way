@@ -1,73 +1,135 @@
-# Welcome to your Lovable project
+# Credlytics
 
-## Project info
+Credlytics helps users track credit card benefits and discover daily merchant deals.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Stack
 
-## How can I edit this code?
+- Vite + React + TypeScript
+- Supabase (Auth + Postgres + RLS)
+- Tailwind + shadcn/ui
+- Vitest + Playwright
 
-There are several ways of editing your application.
+## Local setup
 
-**Use Lovable**
+1. Install dependencies:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+```bash
+npm install
+```
 
-Changes made via Lovable will be committed automatically to this repo.
+2. Create your env file:
 
-**Use your preferred IDE**
+```bash
+cp .env.example .env
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+3. Fill required keys in `.env`:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
 
-Follow these steps:
+Optional:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- `VITE_BILLING_UPGRADE_URL`
+- `VITE_BILLING_PORTAL_URL`
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+4. Run app:
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Database setup (Supabase)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Apply migrations in order:
 
-**Use GitHub Codespaces**
+1. `supabase/migrations/20260127152751_8fa194cf-626f-4ced-b821-f0aad213f8a4.sql`
+2. `supabase/migrations/20260304121000_daily_deals_system.sql`
+3. `supabase/migrations/20260405100000_production_hardening.sql`
+4. `supabase/migrations/20260405123000_billing_integration.sql`
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The hardening migration:
 
-## What technologies are used for this project?
+- auto-creates default subscription + deal preference rows for new users
+- prevents client-side self-upgrade of subscription tier
+- enforces premium-or-featured daily-deals visibility
 
-This project is built with:
+## Stripe billing hooks (Supabase Edge Functions)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Functions added:
 
-## How can I deploy this project?
+- `create-checkout-session`
+- `create-billing-portal-session`
+- `stripe-webhook`
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+Set required secrets in Supabase project:
 
-## Can I connect a custom domain to my Lovable project?
+```bash
+supabase secrets set \
+  STRIPE_SECRET_KEY=sk_live_xxx \
+  STRIPE_WEBHOOK_SECRET=whsec_xxx \
+  STRIPE_PRICE_PREMIUM_ID=price_xxx \
+  STRIPE_PRICE_PRO_ID=price_xxx \
+  APP_SITE_URL=https://your-domain.com
+```
 
-Yes, you can!
+Deploy functions:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```bash
+supabase functions deploy create-checkout-session
+supabase functions deploy create-billing-portal-session
+supabase functions deploy stripe-webhook
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Configure Stripe webhook endpoint:
+
+- URL: `https://<project-ref>.functions.supabase.co/stripe-webhook`
+- Events:
+  - `checkout.session.completed`
+  - `customer.subscription.created`
+  - `customer.subscription.updated`
+  - `customer.subscription.deleted`
+  - `invoice.payment_failed`
+
+After webhook delivery, `public.user_subscriptions` is updated automatically.
+
+## Scripts
+
+- `npm run dev` - start development server
+- `npm run build` - production build
+- `npm run preview` - preview production build
+- `npm run typecheck` - TypeScript check
+- `npm run lint` - lint code
+- `npm run test` - unit tests (Vitest)
+- `npm run e2e` - Playwright E2E suite
+
+## Deploy today
+
+### Option A: Vercel
+
+1. Import repo into Vercel.
+2. Build command: `npm run build`
+3. Output directory: `dist`
+4. Add env vars from `.env.example`.
+5. Deploy.
+
+`vercel.json` is included for SPA route rewrites.
+
+### Option B: Netlify
+
+1. Build command: `npm run build`
+2. Publish directory: `dist`
+3. Add env vars from `.env.example`.
+4. Deploy.
+
+`public/_redirects` is included for SPA route rewrites.
+
+## Pre-deploy checklist
+
+- `npm run lint` passes
+- `npm run typecheck` passes
+- `npm run test` passes
+- `npm run e2e` passes
+- Supabase migrations applied on production project
+- Supabase edge functions deployed and Stripe webhook configured
+- Vercel/Netlify env vars configured
