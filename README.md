@@ -133,3 +133,6 @@ After webhook delivery, `public.user_subscriptions` is updated automatically.
 - Supabase migrations applied on production project
 - Supabase edge functions deployed and Stripe webhook configured
 - Vercel/Netlify env vars configured
+
+
+#The basic idea of my app is to make all deals and Credit card offers available to everyone who are missing. In future will add feature to add new offers or offers where only applicable locally or local owned shops to be submitted or added like a community or a board based on the area.
